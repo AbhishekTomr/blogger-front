@@ -1,0 +1,30 @@
+.form-wrap{
+    /* border: 1px solid black; */
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    height: fit-content;
+    width: fit-content;
+    align-self: center;
+}
+.form{
+    display: flex;
+    flex-flow: column nowrap;
+    width: 25vw;
+}
+
+.form-head{
+    margin: .3rem auto;
+}
+
+.inp-fld{
+    margin: .3rem auto !important;
+    width: 90%;
+}
+
+.submit-btn{
+    width: 90% !important;
+    align-self: center;
+    margin: .3rem auto !important;
+}

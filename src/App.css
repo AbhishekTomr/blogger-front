@@ -1,0 +1,6 @@
+.app-wrap{
+    height: 99vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+}

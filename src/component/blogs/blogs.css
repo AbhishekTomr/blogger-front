@@ -1,0 +1,14 @@
+.btn{
+    margin: .5rem 0 !important;
+}
+.header-wrap{
+    display: flex;
+    justify-content: space-between;
+}
+.updated_ts{
+    margin-top: 1rem;
+}
+.delete-wrap{
+    display: flex;
+    align-items: center;
+}
