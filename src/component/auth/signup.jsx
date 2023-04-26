@@ -26,14 +26,13 @@ const SignUp=(props)=>{
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const errors = validateFormData(formData);
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
     } else {
-      let response = signup(formData);
-      console.log(response.message);
+      let response = await signup(formData);
       props.history.push('/login');
     }
   };

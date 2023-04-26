@@ -1,24 +1,58 @@
-import { addUser,getUser } from "./localStorage"
+const signup = async (user) => {   
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-const signup = (user) => {   
-    const response = addUser({id: window.localStorage.length+1,...user, blogs: []});
+    var raw = JSON.stringify({
+        ...user, blogs: []
+    });
+
+    console.log("sending user to sign up",raw);
+
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
+
+    const req = await fetch("http://localhost:5000/api/v1/sign-up", requestOptions);
+    const res = await req.json();
+    return res;
+}
+
+const login = async (data) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+        ...data
+    });
+
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
+
+    const req = await fetch("http://localhost:5000/api/v1/sign-in", requestOptions)
+    const res = await req.json();
+    return res;
+    }
+
+const getUserInfo = async (userId)=>
+{
+
+    var requestOptions = {
+    method: 'GET',
+    redirect: 'follow'
+    };
+
+    let req = await fetch(`http://localhost:5000/api/v1/getUser/${userId}`, requestOptions)
+    let response = await req.json();
     return response;
+   
 }
 
-const login = (data) => {
-    const user = getUser(data?.email);
-    if(user)
-    {
-        if(user.password === data.password){
-            return {status:true, message:'User Login Successfull !!!', user:user};
-        }else{
-            return {status: false, message: 'Incorrect Pass !!!', user: null};
-        }
-    }
-    else{
-        return {status: false, message: 'User Does Not Exist', user: null};
-    }
-}
-
-export {signup,login};
+export {signup,login,getUserInfo};
 

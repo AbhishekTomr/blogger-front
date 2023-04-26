@@ -1,0 +1,23 @@
+.account-wrap{
+    align-self: center;
+    padding: 1rem;
+}
+.avatar{
+    width: 100px !important;
+    height: 100px !important;
+    font-size: 2rem  !important;
+}
+.user-name-wrap{
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 1rem auto;
+    align-items: center;
+}
+
+.user-name{
+    margin: 1rem auto !important;
+}
+
+.user-fld{
+    margin: .5rem auto;
+}

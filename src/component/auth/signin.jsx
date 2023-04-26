@@ -4,8 +4,11 @@ import {
   Button,
 } from '@material-ui/core';
 import {Link} from 'react-router-dom';
-import React, { useState } from 'react';
-import { login } from '../../services/user';
+import React, { useState, useContext } from 'react';
+import { login, getUserInfo } from '../../services/user';
+import userContext from '../../context/userContext';
+import { getAllBlogs } from '../../services/blogs';
+
 
 const SignIn = (props) => {
 
@@ -16,6 +19,7 @@ const SignIn = (props) => {
     
       const [errors, setErrors] = useState({});
       const history = props.history;
+      const ctx = useContext(userContext);
     
       const handleChange = (event) => {
         const { name, value } = event.target;
@@ -26,16 +30,17 @@ const SignIn = (props) => {
         }));
       };
     
-      const handleSubmit = (event) => {
+      const handleSubmit = async (event) => {
         event.preventDefault();
         const errors = validateFormData(formData);
         if (Object.keys(errors).length > 0) {
           setErrors(errors);
         } else {
-          let response = login(formData);
+          let response = await login(formData);
           if(response.status)
           {
-            props.changeUser(response.user);
+            let userInfo = await getUserInfo(response.data._id);
+            ctx.updateUser(userInfo.data);
             history.push('/');
           }
         }

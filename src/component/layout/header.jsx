@@ -31,7 +31,7 @@ const Header = (props) => {
     return (
       <AppBar position="static" className='header-wrap' size='small'>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} onClick={()=>{history.push('/')}}>
             Blogger AI
           </Typography>
           {props.isLoggedIn && (

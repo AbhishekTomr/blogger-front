@@ -1,7 +1,8 @@
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions ,TextField } from "@material-ui/core";
 import { useState, useContext } from "react";
 import userContext from '../../context/userContext';
-import { getAllBlogs } from "../../services/blogs";
+import { getAllBlogs,addBlog } from "../../services/blogs";
+import { getUserInfo } from "../../services/user";
 
 const AddBlog = (props) => {
   const open = props.showAddBlog;
@@ -23,7 +24,7 @@ const AddBlog = (props) => {
     setOpen(false);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if(blogData.title.length==0)
     {
       changeError(oldState=>({...oldState,title:'Title Cannot Be Empty!!!'}));
@@ -36,18 +37,20 @@ const AddBlog = (props) => {
     {
       handleClose();
       let blog = {
-        id:`${user.id}-${user.blogs.length+1}`,
         ...blogData,
         author: user.email,
         created_ts: new Date(),
         updated_ts: new Date(),
-        likes: 0,
+        likes: [],
         comments: []
       }
 
-      updateUser(user=>({...user, blogs: [...user.blogs,blog]}));
-      ctx.changeAllBlogs(getAllBlogs());
-      console.log("data to be submitted",blogData);
+      let response = await addBlog(blog);
+      if(response.status)
+      {
+         let updatedUser = await getUserInfo(user._id);
+         ctx.updateUser(updatedUser.data);
+      }
     }
 
 

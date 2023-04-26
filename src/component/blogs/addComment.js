@@ -1,7 +1,6 @@
 import { useState,useContext } from "react";
 import { TextField,Button } from "@material-ui/core";
 import userContext from "../../context/userContext";
-import { getUser, updateUser } from "../../services/localStorage";
 import { getAllBlogs } from "../../services/blogs";
 
 const AddComment = (props) =>{
@@ -17,16 +16,16 @@ const AddComment = (props) =>{
             comment: comment
         }
         let newBlog = {...currentBlog,comments:[...currentBlog.comments,newComment]};
-        let blogUser = getUser(currentBlog.author);
-        let updatedBlogs = blogUser.blogs.map(item=>{
-            if(item.id === newBlog.id)
-            {
-                return newBlog;
-            }
-            return item;
-        })
-        let updatedUser = {...blogUser,blogs:[...updatedBlogs]};
-        updateUser(updatedUser)
+        // let blogUser = getUser(currentBlog.author);
+        // let updatedBlogs = blogUser.blogs.map(item=>{
+        //     if(item.id === newBlog.id)
+        //     {
+        //         return newBlog;
+        //     }
+        //     return item;
+        // })
+        // let updatedUser = {...blogUser,blogs:[...updatedBlogs]};
+        // updateUser(updatedUser)
         ctx.changeAllBlogs(getAllBlogs());
         changeComment('');
     }

@@ -5,7 +5,7 @@ import SignUp from './component/auth/signup';
 import { useEffect, useState } from 'react';
 import Dashboard from './component/dashboard/dashboard';
 import userContext from './context/userContext';
-import { updateUser } from './services/localStorage';
+import UserAccount from './component/profile/account';
 import { getAllBlogs } from './services/blogs';
 
 
@@ -14,10 +14,12 @@ function App() {
   const [user,changeUser] = useState(null);
   const [allBlogs, changeAllBlogs] = useState([]);
 
+
+
   useEffect(()=>{
-    updateUser(user);
-    changeAllBlogs(getAllBlogs())
+    getAllBlogs().then(res=>changeAllBlogs(res.data));
   },[user])
+
   
   return (
     <userContext.Provider 
@@ -30,8 +32,9 @@ function App() {
     }>
       <div className='app-wrap'>
        <Switch>
-        <Route exact path="/login" render={()=><SignIn changeUser={changeUser} history={history}/>} />
+        <Route exact path="/login" render={()=><SignIn history={history}/>} />
         <Route exact path="/signup" render={()=><SignUp history={history}/>} />      
+        <Route exact path="/user/account" render={()=><UserAccount history={history}/>} />
         <Route path="/">
             {(user) ? <Dashboard history={history}/> : <Redirect to="/login" />}
         </Route>
