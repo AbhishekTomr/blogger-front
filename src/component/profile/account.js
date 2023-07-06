@@ -15,7 +15,7 @@ import './profile.css';
 import { useContext } from "react";
 import userContext from "../../context/userContext";
 
-const UserAccount = () => {
+const UserAccount = ({history}) => {
   let ctx = useContext(userContext);
   let user = ctx.user;
 
@@ -26,7 +26,8 @@ const UserAccount = () => {
         <Typography className="user-name" variant="h4">{`${user.firstName} ${user.lastName}`}</Typography>
         </div>
         <div className="fld">{user.email}</div>
-        <Button className="changePass" color="primary" variant="contained">Change password</Button>
+        <div className="fld">{`Blogs : ${user.blogs.length}`}</div>
+        <Button onClick={()=>{history.push('/')}} className="btn center" fullWidth color="primary" variant="contained">Go Back To Dashboard</Button>
     </Card>
   );
 };

@@ -9,6 +9,17 @@ const getAllBlogs = async () => {
     return response;
 }
 
+const getMyBlogs = async (id) => {
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+      
+     let req = await fetch(`http://localhost:5000/api/v1/myblogs/${id}`, requestOptions)
+     let response = await req.json();
+     return response;
+}
+
 const addBlog = async (blogData) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -47,11 +58,12 @@ const deleteBlog = async (blogId) => {
         return response;
 }
 
-const updateBlog = async (updatedBlog) => {
+const updateBlog = async (blog) => {
+    console.log("updated blog recived",blog);
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify(updatedBlog);
+    var raw = JSON.stringify(blog);
 
     var requestOptions = {
         method: 'POST',
@@ -60,9 +72,9 @@ const updateBlog = async (updatedBlog) => {
         redirect: 'follow'
       };
       
-    const req = await fetch("localhost:5000/api/v1/blogs/update", requestOptions)
+    const req = await fetch("http://localhost:5000/api/v1/blogs/update", requestOptions)
     const response = await req.json();
     return response;
 }
 
-export {getAllBlogs,addBlog,deleteBlog,updateBlog};
+export {getAllBlogs,addBlog,deleteBlog,updateBlog, getMyBlogs};

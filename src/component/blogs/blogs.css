@@ -1,6 +1,9 @@
 .btn{
     margin: .5rem 0 !important;
 }
+.space-hr{
+    margin: 0 .5rem !important;
+}
 .header-wrap{
     display: flex;
     justify-content: space-between;

@@ -7,8 +7,9 @@ import userContext from "../../context/userContext";
 import AddComment from "./addComment";
 import { deleteBlog, updateBlog } from "../../services/blogs";
 import { getUserInfo } from "../../services/user";
+import { deleteComment } from "../../services/comments";
 
-const Blog = ()=>{
+const Blog = (props)=>{
     const ctx = useContext(userContext);
 
     const deleteThisBlog = async (blogId) =>{
@@ -20,9 +21,20 @@ const Blog = ()=>{
       }
     }
 
-    const deleteComment = (blog,commentId) => {
-      let updatedComments = blog.comments.filter(item=>item.id!=commentId);
-      let newBlog = {...blog,comments:[...updatedComments]};
+    const deleteThisComment = async (blog,commentId) => {
+      let comment = blog.comments.find(item=> item.id === commentId);
+      console.log("comment found",comment);
+      if(comment)
+      {
+        let response = await deleteComment(comment);
+        if(response.status)
+        {
+          let user = await getUserInfo(ctx.user._id);
+          
+          console.log("updating the user",user.data);
+          ctx.updateUser(user.data);
+        }
+      }
     //   let updatedBlogs = blogUser.blogs.map(item=>{
     //     if(item.id === newBlog.id)
     //     {
@@ -35,8 +47,8 @@ const Blog = ()=>{
     }
 
     const blogData = ctx.allBlogs;
-    console.log("blog data",blogData);
-    console.log("user",ctx.user);
+
+    console.log('blog data',blogData);
     
     return (
     <>
@@ -51,6 +63,12 @@ const Blog = ()=>{
                 subheader={post.author}
             />
             <div className="delete-wrap">
+              <Button className="btn space-hr" variant="contained" color="primary" onClick={()=>{
+                props.changShowAddBlog(true);
+                props.changeIsEditMode(true);
+                props.changeBlogData({title:post.title,body:post.body});
+                props.changeCurrentBlog(post);
+              }}>Update</Button>
             <Typography className='updated-ts' variant="body1" color="textSecondary" component="p">
               {new Date(post.updated_ts).toLocaleString()}
             </Typography>
@@ -81,10 +99,10 @@ const Blog = ()=>{
                       <Email />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary={comment.email} secondary={comment.comment} />
-                  {(comment.email===ctx.user.email)&&(
+                  <ListItemText primary={comment.author} secondary={comment.message} />
+                  {(comment.author===ctx.user.email)&&(
                   <IconButton id='delete-comment'>
-                    <DeleteIcon onClick={()=>{deleteComment(post,comment.id)}}/>
+                    <DeleteIcon onClick={()=>{deleteThisComment(post,comment.id)}}/>
                   </IconButton>)}
                 </ListItem>
               ))}

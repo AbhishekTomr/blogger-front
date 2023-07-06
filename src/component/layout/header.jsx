@@ -8,6 +8,7 @@ import Menu from '@mui/material/Menu';
 import { useState } from 'react';
 import userContext from '../../context/userContext';
 import { useContext } from 'react';
+import { Switch } from '@material-ui/core';
 import './layout.css';
 
 const Header = (props) => {
@@ -28,11 +29,19 @@ const Header = (props) => {
      setAnchorEl(null);
     };
 
+    const handleChange = (e) => {
+      ctx.toggleMyBlogs(oldState=>!oldState);
+    }
+
     return (
       <AppBar position="static" className='header-wrap' size='small'>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} onClick={()=>{history.push('/')}}>
             Blogger AI
+          </Typography>
+          <Typography variant='p'>
+            My Blogs
+            <Switch  onChange={handleChange} />
           </Typography>
           {props.isLoggedIn && (
             <div>
@@ -73,7 +82,6 @@ const Header = (props) => {
                 onClose={handleClose}
               >
                 <MenuItem id='profile' className='menu-item' onClick={handleClose}>Profile</MenuItem>
-                <MenuItem id='account' className='menu-item' onClick={handleClose}>My account</MenuItem>
                 <MenuItem id='account' className='menu-item' onClick={logout}>Logout</MenuItem>
               </Menu>
             </div>

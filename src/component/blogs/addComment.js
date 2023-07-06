@@ -1,37 +1,33 @@
 import { useState,useContext } from "react";
 import { TextField,Button } from "@material-ui/core";
 import userContext from "../../context/userContext";
-import { getAllBlogs } from "../../services/blogs";
+import { addComment } from "../../services/comments";
+import { getUserInfo } from "../../services/user";
 
 const AddComment = (props) =>{
     const [comment,changeComment] = useState('');
     const ctx = useContext(userContext);
     const currentBlog = props.post;
 
-    const addComment = (e) => {
+    const addThisComment = async (e) => {
         e.preventDefault();
         let newComment = {
             id: currentBlog.comments.length+1,
-            email: ctx.user.email,
-            comment: comment
+            blogId: currentBlog._id,
+            author: ctx.user.email,
+            message: comment
         }
-        let newBlog = {...currentBlog,comments:[...currentBlog.comments,newComment]};
-        // let blogUser = getUser(currentBlog.author);
-        // let updatedBlogs = blogUser.blogs.map(item=>{
-        //     if(item.id === newBlog.id)
-        //     {
-        //         return newBlog;
-        //     }
-        //     return item;
-        // })
-        // let updatedUser = {...blogUser,blogs:[...updatedBlogs]};
-        // updateUser(updatedUser)
-        ctx.changeAllBlogs(getAllBlogs());
+        let response = await addComment(newComment);
+        if(response.status)
+        {
+            let updatedUser = await getUserInfo(ctx.user._id);
+            ctx.updateUser(updatedUser.data);
+        }
         changeComment('');
     }
 
     return (
-        <form className="add-comment-wrap" onSubmit={addComment}>
+        <form className="add-comment-wrap" onSubmit={addThisComment}>
                 <TextField 
                  label="Add Comment" 
                  name="comment"

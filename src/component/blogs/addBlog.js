@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions ,TextField } from "@material-ui/core";
 import { useState, useContext } from "react";
 import userContext from '../../context/userContext';
-import { getAllBlogs,addBlog } from "../../services/blogs";
+import { getAllBlogs,addBlog, updateBlog } from "../../services/blogs";
 import { getUserInfo } from "../../services/user";
 
 const AddBlog = (props) => {
@@ -9,9 +9,9 @@ const AddBlog = (props) => {
   const setOpen = props.changeShowAddBlog;
   const ctx = useContext(userContext);
   const user = ctx.user;
-  const updateUser = ctx.updateUser;
 
-  const [blogData,changeBlogData] = useState({title: '', body: ''});
+  const blogData = props.blogData
+  const changeBlogData = props.changeBlogData;
   const [error,changeError] = useState({title:'',body:''})
 
 
@@ -21,6 +21,8 @@ const AddBlog = (props) => {
   }
 
   const handleClose = () => {
+    props.changeBlogData({title:'',body:''})
+    props.changeCurrentBlog({});
     setOpen(false);
   };
 
@@ -35,24 +37,32 @@ const AddBlog = (props) => {
     }
     if(blogData.title.length && blogData.body.length)
     {
-      handleClose();
-      let blog = {
+      let blog = !props.isEditMode?{
         ...blogData,
         author: user.email,
         created_ts: new Date(),
         updated_ts: new Date(),
         likes: [],
         comments: []
+      }:{
+        _id: props.currentBlog._id,
+        ...blogData,
+        author: props.currentBlog.author,
+        created_ts: props.currentBlog.created_ts,
+        updated_ts: new Date(),
+        likes: props.currentBlog.likes,
+        comments: props.currentBlog.cumments,
       }
 
-      let response = await addBlog(blog);
+      let response = props.isEditMode?await updateBlog(blog):await addBlog(blog);
+      props.changeIsEditMode(false);
       if(response.status)
       {
          let updatedUser = await getUserInfo(user._id);
          ctx.updateUser(updatedUser.data);
       }
+      handleClose();
     }
-
 
   }
 
@@ -66,6 +76,7 @@ const AddBlog = (props) => {
             margin="dense"
             id="title"
             label="Title"
+            value={blogData.title}
             type="text"
             fullWidth
             variant="standard"
@@ -79,6 +90,7 @@ const AddBlog = (props) => {
             id="body"
             label="Blog"
             type="text"
+            value={blogData.body}
             fullWidth
             variant="standard"
             error={!!error.body}
@@ -89,7 +101,7 @@ const AddBlog = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit}>Publish</Button>
+          <Button onClick={handleSubmit}>{props.isEditMode?'Save':'Publish'}</Button>
         </DialogActions>
       </Dialog>
     </div>

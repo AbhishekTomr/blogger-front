@@ -21,3 +21,11 @@
 .user-fld{
     margin: .5rem auto;
 }
+.fld{
+    text-align: center;
+    margin: .5rem auto;
+}
+
+.center{
+    margin: 0 auto;
+}
